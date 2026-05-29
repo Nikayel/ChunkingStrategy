@@ -82,4 +82,8 @@ def retrieve(query, n_results=N_RESULTS):
             "game": query_results["metadatas"][0][i]["game"],
             "distance": query_results["distances"][0][i]
         })
+
+    for chunk in result:
+        print(f"[{chunk['game']}] (dist: {chunk['distance']:.3f}) {chunk['text'][:80]}...")
+
     return result

@@ -36,4 +36,25 @@ def generate_response(query, retrieved_chunks):
         )
 
     # Your implementation here.
-    return "⚙️ Response generation not yet implemented. Complete Milestone 3 to activate answers."
+    context = "\n".join(
+      f'<chunk game="{c["game"]}">\n{c["text"]}\n</chunk>'
+      for c in retrieved_chunks
+  )
+    system_prompt = (
+        "You are a board game rules assistant. Answer the user's question using "
+    "ONLY the rule text provided in the context. Do not use outside knowledge "
+    "about board games. If the context does not contain the answer, say so "
+    "clearly — do not guess. Always state which game your answer comes from, "
+    "using the game name labeled in the context."
+    )
+
+
+
+    response = _client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Answer the following question using only the provided context. \n\nContext:\n{context}\n\nQuestion: {query}\n\nAnswer:"}
+        ]
+    )
+    return response.choices[0].message.content
