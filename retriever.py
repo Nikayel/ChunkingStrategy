@@ -69,4 +69,17 @@ def retrieve(query, n_results=N_RESULTS):
         return []
 
     # Your implementation here.
-    return []
+    query_results = _collection.query(
+        query_texts=[query],
+        n_results=n_results,
+        include=["documents", "metadatas", "distances"]
+    )
+
+    result = []
+    for i in range(len(query_results["ids"][0])):
+        result.append({
+            "text": query_results["documents"][0][i],
+            "game": query_results["metadatas"][0][i]["game"],
+            "distance": query_results["distances"][0][i]
+        })
+    return result
